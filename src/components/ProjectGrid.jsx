@@ -5,6 +5,8 @@ export default function ProjectGrid({ projects }) {
   const [showAll, setShowAll] = useState(false);
   const videoRefs = useRef({});
 
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+
   // Filter projects based on search query
   const filteredProjects = useMemo(() => {
     const lowerSearch = search.toLowerCase();
@@ -62,7 +64,7 @@ export default function ProjectGrid({ projects }) {
           displayedProjects.map((project) => (
             <a 
               key={project.slug}
-              href={`${import.meta.env.BASE_URL}projects/${project.slug}/`.replace(/\/+/g, '/')} 
+              href={`${base}/projects/${project.slug}/`.replace(/\/+/g, '/')}
               className="project-card glass-panel group"
               onMouseEnter={() => handleMouseEnter(project.slug)}
               onMouseLeave={() => handleMouseLeave(project.slug)}
