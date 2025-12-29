@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-
+<InteractiveCanvas client:only="react" />
 export default function InteractiveCanvas() {
   const mountRef = useRef(null);
 
