@@ -6,4 +6,5 @@ export default defineConfig({
 
   // Optional: This helps Astro generate cleaner URLs
   trailingSlash: 'always',
+  integrations: [react()],
 });
