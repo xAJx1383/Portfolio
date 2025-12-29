@@ -29,7 +29,7 @@ jobs:
         with:
             # specific package manager (optional, defaults to auto-detect)
             # package-manager: pnpm 
-            # specific node version (optional, defaults to 18)
+            package-manager: npm
             node-version: 20
 
   deploy:
