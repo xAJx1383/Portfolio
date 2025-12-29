@@ -45,26 +45,51 @@ const { title, description = "Roblox Developer Portfolio", image } = Astro.props
     </footer>
 
     <!-- Lenis Script -->
-    <script is:inline>
+    <script>
       import Lenis from 'lenis'; 
-      let lenis;
+
+      let lenis: Lenis;
+
       function initLenis() {
+        // Destroy existing instance if it exists (prevents memory leaks during transitions)
         if (lenis) lenis.destroy();
+
         lenis = new Lenis({
           duration: 1.2,
           easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-          direction: 'vertical',
-          smooth: true,
+          orientation: 'vertical',
+          gestureOrientation: 'vertical',
+          smoothWheel: true,
+          wheelMultiplier: 1,
+          touchMultiplier: 2,
+          infinite: false,
         });
-        function raf(time) {
+
+        function raf(time: number) {
           lenis.raf(time);
           requestAnimationFrame(raf);
         }
+
         requestAnimationFrame(raf);
       }
+
+      // Initialize on initial load
       initLenis();
-      document.addEventListener('astro:page-load', () => lenis && lenis.resize());
-      document.addEventListener('astro:after-swap', () => window.scrollTo(0, 0));
+
+      // Re-initialize or resize on Astro page navigation
+      document.addEventListener('astro:page-load', () => {
+        if (!lenis) {
+          initLenis();
+        } else {
+          lenis.resize();
+        }
+      });
+
+      // Optional: Reset scroll position on page swap
+      document.addEventListener('astro:after-swap', () => {
+        window.scrollTo(0, 0);
+        lenis?.scrollTo(0, { immediate: true });
+      });
     </script>
 
     <style>
