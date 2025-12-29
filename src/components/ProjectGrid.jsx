@@ -62,7 +62,7 @@ export default function ProjectGrid({ projects }) {
           displayedProjects.map((project) => (
             <a 
               key={project.slug}
-              href={`/projects/${project.slug}`} 
+              href={`${import.meta.env.BASE_URL}projects/${project.slug}/`.replace(/\/+/g, '/')}
               className="project-card glass-panel group"
               onMouseEnter={() => handleMouseEnter(project.slug)}
               onMouseLeave={() => handleMouseLeave(project.slug)}

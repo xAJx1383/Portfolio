@@ -15,7 +15,7 @@ export default defineConfig({
    * If your repository is named "Portfolio", set this to '/Portfolio'.
    * If your repository is named "xAJx1383.github.io", set this to '/'.
    */
-  base: '/Portfolio',
+  base: '/Portfolio/',
 
   /**
    * 3. INTEGRATIONS
