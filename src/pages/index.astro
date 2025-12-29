@@ -1,0 +1,515 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import ProjectGrid from '../components/ProjectGrid.jsx';
+
+// Fetch projects and filter out drafts in production
+const projects = await getCollection('projects', ({ data }) => 
+  import.meta.env.PROD ? data.draft !== true : true
+);
+
+// Sort projects by defined order, then alphabetically by title
+projects.sort((a, b) => (a.data.order - b.data.order) || a.data.title.localeCompare(b.data.title));
+---
+
+<Layout title="AJ | Systems & Intelligence Engineer">
+  
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="pill-badge">
+        <span class="pulse-dot"></span> Passion is The Key
+      </div>
+      <h1>
+        Engineering <br />
+        <span class="text-gradient">High-Performance Intelligence</span>
+      </h1>
+      <p class="subtitle">
+        Specializing in C++ systems engineering, Machine Learning, and high-integrity code. 
+        I build robust architectures that bridge low-level performance with modern intelligence.
+      </p>
+      
+      <div class="hero-actions">
+        <a href="#work" class="btn primary">View Systems</a>
+        <a href="#contact" class="btn secondary">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK SECTION -->
+  <section id="work" class="section-container">
+    <!-- React Project Grid Component -->
+    <ProjectGrid client:load projects={projects} />
+
+    <!-- Confidentiality Notice for Closed Source Work -->
+    <div class="confidential-notice glass-panel">
+      <div class="notice-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+      <div class="notice-content">
+        <h3>Proprietary & Closed Source Work</h3>
+        <p>
+          Due to Non-Disclosure Agreements (NDAs) and the sensitive nature of certain projects—including military-grade C++ frameworks and enterprise-level AI infrastructures—some of my most significant contributions are not publicly listed here. 
+          <strong>Detailed technical case studies can be provided upon request during formal inquiries.</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section id="about" class="section-container">
+    <div class="about-grid glass-panel">
+      <div class="about-content">
+        <h2>Technical Philosophy</h2>
+        <p>
+          I am a systems engineer with over <strong>3 years</strong> of experience across diverse technical domains. My background ranges from writing <strong>high-integrity C++</strong> for mission-critical applications to developing <strong>Machine Learning</strong> models and data-driven infrastructures.
+        </p>
+        <p>
+          I thrive on solving complex problems where performance is non-negotiable. Whether it's optimizing low-level algorithms or engineering prompts for large-scale LLM operations, my focus remains on <strong>reliability, scalability, and precision.</strong>
+        </p>
+        
+        <div class="stats-row">
+          <div class="stat">
+            <span class="stat-num text-gradient">3+</span>
+            <span class="stat-label">Years Engineering</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num text-gradient">100%</span>
+            <span class="stat-label">Performance Focused</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="skills-list">
+        <div class="skill-group">
+          <h3>Core Engineering</h3>
+          <ul>
+            <li>C++ (High Performance)</li>
+            <li>Python (Automation & Tooling)</li>
+            <li>Luau (Systems Architecture)</li>
+            <li>Node.js (Backend Infrastructure)</li>
+          </ul>
+        </div>
+        
+        <div class="skill-group" style="margin-top: 2.5rem;">
+          <h3>Intelligence & Data</h3>
+          <ul>
+            <li>Machine Learning (PyTorch/TF)</li>
+            <li>Prompt Engineering (LLM Ops)</li>
+            <li>Data Science & Analytics</li>
+            <li>Algorithm Optimization</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact" class="section-container contact-section">
+    <div class="contact-box glass-panel">
+      <h2>Let's Build</h2>
+      <!-- <p>I am currently open to collaborations on high-impact projects and systems architecture.</p> -->
+      
+      <div class="contact-links">
+        <!-- <a href="mailto:contact@example.com" class="contact-btn email">
+          <span>✉️</span> contact@example.com
+        </a> -->
+        <a href="https://github.com/xAJx1383" target="_blank" class="contact-btn github">
+          <span>💻</span> GitHub Profile
+        </a>
+        <a href="https://discord.com/users/544457869672579073" target="_blank" class="contact-btn discord">
+          <span>🔗</span> Discord
+        </a>
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style is:global>
+  /* --- Shared Section Styles --- */
+  .section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 8rem 1.5rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* --- Project Grid Styles (Critical for React Component) --- */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 4rem;
+    flex-wrap: wrap;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+  }
+
+  .section-header h2 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: white;
+    white-space: nowrap;
+  }
+
+  .line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--bg-300), transparent);
+  }
+
+  .search-container {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border-radius: 100px;
+    background: var(--bg-200);
+    border: 1px solid var(--bg-300);
+    color: white;
+    font-family: var(--font-body);
+    outline: none;
+    transition: all 0.3s;
+  }
+
+  .search-input:focus {
+    border-color: var(--primary-100);
+    box-shadow: 0 0 0 4px rgba(0, 133, 255, 0.1);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-200);
+    pointer-events: none;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2.5rem;
+  }
+
+  .project-card {
+    border-radius: 24px;
+    overflow: hidden;
+    text-decoration: none;
+    background: rgba(45, 45, 45, 0.3);
+    border: 1px solid var(--bg-300);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary-100);
+    background: rgba(45, 45, 45, 0.5);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .media-container {
+    aspect-ratio: 16/10;
+    position: relative;
+    overflow: hidden;
+    background: #111;
+  }
+
+  .thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+  }
+
+  .project-card:hover .thumbnail {
+    transform: scale(1.05);
+  }
+
+  .hover-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .project-card:hover .hover-video {
+    opacity: 1;
+  }
+
+  .card-details {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .genre {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--primary-200);
+    letter-spacing: 0.15em;
+    font-weight: 800;
+  }
+
+  .card-details h3 {
+    color: white;
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    margin: 0;
+  }
+
+  .tags-container {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .tech-tag {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    background: var(--bg-300);
+    border-radius: 6px;
+    color: var(--primary-300);
+    font-weight: 600;
+  }
+
+  /* --- Confidential Notice Styles --- */
+  .confidential-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 3rem;
+    margin-top: 5rem;
+    border-radius: 24px;
+    border-left: 4px solid var(--primary-100);
+    background: rgba(45, 45, 45, 0.2);
+  }
+
+  .notice-icon {
+    background: rgba(0, 133, 255, 0.1);
+    color: var(--primary-100);
+    padding: 1rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .notice-content h3 {
+    color: white;
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .notice-content p {
+    color: var(--text-200);
+    line-height: 1.7;
+    font-size: 1.05rem;
+    max-width: 800px;
+  }
+
+  .notice-content strong {
+    color: var(--primary-200);
+  }
+
+  /* --- Hero Section --- */
+  .hero-section {
+    min-height: 95vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 4rem;
+  }
+
+  .hero-content { max-width: 900px; }
+
+  .pill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--bg-200);
+    padding: 0.6rem 1.4rem;
+    border-radius: 100px;
+    border: 1px solid var(--bg-300);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-200);
+    margin-bottom: 2.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--primary-100);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(0, 133, 255, 0.7);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 133, 255, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 133, 255, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 133, 255, 0); }
+  }
+
+  h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(2.8rem, 9vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.04em;
+    color: white;
+  }
+
+  .subtitle {
+    font-size: clamp(1.1rem, 3vw, 1.3rem);
+    color: var(--text-200);
+    max-width: 750px;
+    margin: 0 auto 3.5rem auto;
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1.25rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 1rem 2.5rem;
+    border-radius: 100px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1rem;
+  }
+
+  .btn.primary { background: white; color: black; }
+  .btn.secondary {
+    background: var(--bg-200);
+    color: white;
+    border: 1px solid var(--bg-300);
+    backdrop-filter: blur(10px);
+  }
+
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  /* --- About Section --- */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 4rem;
+    padding: 4.5rem;
+    border-radius: 32px;
+    background: rgba(45, 45, 45, 0.3);
+    border: 1px solid var(--bg-300);
+  }
+
+  .about-content h2 { font-family: var(--font-heading); font-size: 2.5rem; color: white; margin-bottom: 2rem; }
+  .about-content p { color: var(--text-200); line-height: 1.8; margin-bottom: 1.5rem; font-size: 1.1rem; }
+
+  .stats-row { 
+    display: flex; 
+    gap: 4rem; 
+    margin-top: 3.5rem; 
+    border-top: 1px solid var(--bg-300); 
+    padding-top: 3rem; 
+  }
+
+  .stat-num { font-size: 3rem; font-weight: 800; line-height: 1; }
+  .stat-label { font-size: 0.9rem; color: var(--text-200); margin-top: 0.75rem; }
+
+  .skill-group h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--primary-200);
+    margin-bottom: 1.5rem;
+  }
+
+  .skills-list li { 
+    margin-bottom: 0.8rem; 
+    color: white; 
+    padding-left: 1.5rem; 
+    position: relative; 
+    list-style: none;
+    font-weight: 500;
+  }
+  .skills-list li::before { 
+    content: "→"; 
+    color: var(--primary-100); 
+    position: absolute; 
+    left: 0; 
+  }
+
+  /* --- Contact Section --- */
+  .contact-box {
+    text-align: center;
+    padding: 6rem 2rem;
+    border-radius: 40px;
+    background: linear-gradient(180deg, rgba(45,45,45,0.4) 0%, rgba(30,30,30,0.4) 100%);
+  }
+
+  .contact-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+  .contact-btn {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 1.2rem 2rem;
+    background: var(--bg-200);
+    border: 1px solid var(--bg-300);
+    border-radius: 16px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+  .contact-btn:hover { 
+    background: var(--primary-100); 
+    border-color: var(--primary-100);
+    transform: translateY(-5px); 
+  }
+
+  /* --- Mobile Responsiveness --- */
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; padding: 2.5rem; }
+    .grid-container { grid-template-columns: 1fr; }
+    .confidential-notice { flex-direction: column; padding: 2rem; gap: 1.5rem; }
+    .stats-row { flex-direction: column; gap: 2rem; }
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 2.8rem; }
+    .hero-actions { flex-direction: column; }
+    .btn { width: 100%; text-align: center; }
+  }
+</style>

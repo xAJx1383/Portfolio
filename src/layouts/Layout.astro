@@ -1,0 +1,96 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import InteractiveCanvas from '../components/InteractiveCanvas.jsx';
+import SEO from '../components/SEO.astro'; 
+import Header from '../components/Header.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const { title, description = "Roblox Developer Portfolio", image } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SEO title={title} description={description} image={image} />
+    <ViewTransitions />
+
+    <style>
+      /* Lenis Fixes */
+      html.lenis, html.lenis body { height: auto; }
+      .lenis.lenis-smooth { scroll-behavior: auto !important; }
+      .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+      .lenis.lenis-stopped { overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <!-- Persistent Background -->
+    <div id="canvas-container" transition:persist>
+      <InteractiveCanvas client:load />
+    </div>
+
+    <Header />
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; {new Date().getFullYear()} AJ. Built with Astro & Three.js.</p>
+    </footer>
+
+    <!-- Lenis Script -->
+    <script is:inline>
+      import Lenis from 'lenis'; 
+      let lenis;
+      function initLenis() {
+        if (lenis) lenis.destroy();
+        lenis = new Lenis({
+          duration: 1.2,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          direction: 'vertical',
+          smooth: true,
+        });
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+      }
+      initLenis();
+      document.addEventListener('astro:page-load', () => lenis && lenis.resize());
+      document.addEventListener('astro:after-swap', () => window.scrollTo(0, 0));
+    </script>
+
+    <style>
+      #canvas-container {
+        position: fixed;
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100vh;
+        z-index: -1; /* Keep it behind content */
+        pointer-events: none;
+        background-color: var(--bg-100); /* Ensure background is here if CSS fails */
+      }
+      main {
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+      }
+      .site-footer {
+        text-align: center;
+        padding: 4rem 0 2rem;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        position: relative;
+        z-index: 1;
+      }
+    </style>
+  </body>
+</html>

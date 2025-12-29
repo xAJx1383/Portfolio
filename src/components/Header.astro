@@ -1,0 +1,95 @@
+---
+const links = [
+  { name: "Work", href: "/#work" },
+  { name: "About", href: "/#about" },
+];
+---
+
+<header class="navbar glass-panel">
+  <div class="nav-content">
+    <a href="/" class="logo">
+      AJ<span class="dot">.</span>
+    </a>
+
+    <nav>
+      {links.map(link => (
+        <a href={link.href} class="nav-link">{link.name}</a>
+      ))}
+      <!-- Updated Link -->
+      <a href="/#contact" class="cta-button">
+        Contact Me
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  /* Same styles as before, just ensuring file content is complete */
+  .navbar {
+    position: fixed;
+    top: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1000px;
+    z-index: 100;
+    border-radius: 100px;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: white;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .dot { color: var(--accent-primary); }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover { color: white; }
+
+  .cta-button {
+    background: white;
+    color: black;
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .cta-button:hover {
+    transform: scale(1.05);
+    background: var(--accent-primary);
+    color: white;
+  }
+
+  @media (max-width: 600px) {
+    .navbar { width: 95%; top: 1rem; padding: 0.75rem 1rem; }
+    .nav-link { display: none; }
+  }
+</style>

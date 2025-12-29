@@ -1,0 +1,294 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+// Generate paths for all project entries
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => 
+    import.meta.env.PROD ? data.draft !== true : true
+  );
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+const { title, description, image, video, stack, gameLink, role, genre } = project.data;
+---
+
+<Layout title={title} description={description} image={image.src}>
+  <article class="project-container">
+    
+    <!-- Hero Media Section -->
+    <div class="media-wrapper glass-panel" transition:name={`project-media-${project.slug}`}>
+      {video ? (
+        <video 
+          src={video} 
+          autoplay 
+          loop 
+          muted 
+          playsinline 
+          controls 
+          class="hero-media"
+        />
+      ) : (
+        <Image 
+          src={image} 
+          alt={title} 
+          class="hero-media" 
+          width={1920} 
+          height={1080} 
+          loading="eager" 
+        />
+      )}
+    </div>
+
+    <div class="content-grid">
+      <!-- Main Content Column with Glass Blur -->
+      <div class="main-column glass-panel content-blur-wrapper">
+        <header class="content-header">
+          <nav class="breadcrumbs">
+            <a href="/" class="back-link">← Projects</a> 
+            <span class="separator">/</span> 
+            <span class="current">{title}</span>
+          </nav>
+          
+          <h1 transition:name={`project-title-${project.slug}`}>{title}</h1>
+          <p class="lead">{description}</p>
+        </header>
+
+        <div class="prose-container">
+          <Content />
+        </div>
+      </div>
+
+      <!-- Sidebar Metadata -->
+      <aside class="meta-sidebar">
+        <div class="glass-panel sticky-card">
+          <div class="meta-group">
+            <h3>Role</h3>
+            <p>{role}</p>
+          </div>
+          
+          <div class="meta-group">
+            <h3>Genre</h3>
+            <p>{genre}</p>
+          </div>
+
+          <div class="meta-group">
+            <h3>Tech Stack</h3>
+            <div class="tags">
+              {stack.map(t => <span key={t}>{t}</span>)}
+            </div>
+          </div>
+
+          {gameLink && (
+            <a href={gameLink} target="_blank" rel="noopener noreferrer" class="play-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              Play Experience
+            </a>
+          )}
+        </div>
+      </aside>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .project-container {
+    max-width: 1200px;
+    margin: 8rem auto 4rem;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* --- Hero Media --- */
+  .media-wrapper {
+    width: 100%;
+    aspect-ratio: 21/9;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 3rem;
+    background: #111;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+
+  .hero-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* --- Layout Grid --- */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  /* --- Main Content Glass Wrapper --- */
+  .content-blur-wrapper {
+    padding: 3.5rem;
+    border-radius: 32px;
+    background: rgba(30, 30, 30, 0.45); /* Tinted to match --bg-100 */
+    backdrop-filter: blur(25px) saturate(160%);
+    -webkit-backdrop-filter: blur(25px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  .content-header h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-heading);
+    color: white;
+  }
+
+  .breadcrumbs {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .back-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover {
+    color: var(--accent-primary);
+  }
+
+  .separator { opacity: 0.3; }
+  .current { color: white; font-weight: 500; }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--text-200);
+    line-height: 1.6;
+    margin-bottom: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* --- Sidebar --- */
+  .sticky-card {
+    position: sticky;
+    top: 7rem;
+    padding: 2rem;
+    border-radius: 24px;
+    background: rgba(45, 45, 45, 0.4);
+    border: 1px solid var(--card-border);
+  }
+
+  .meta-group {
+    margin-bottom: 2rem;
+  }
+  
+  .meta-group h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-primary);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+  }
+
+  .meta-group p {
+    font-weight: 500;
+    color: white;
+    font-size: 1.1rem;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  
+  .tags span {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--text-200);
+  }
+
+  .play-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 1.1rem;
+    background: var(--accent-primary);
+    color: white;
+    font-weight: 700;
+    border-radius: 14px;
+    text-decoration: none;
+    margin-top: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .play-btn:hover {
+    background: #006fff; /* --accent-100 */
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 133, 255, 0.3);
+  }
+
+  /* --- Responsive Adjustments --- */
+  @media (max-width: 1024px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    
+    .meta-sidebar {
+      order: 2;
+    }
+
+    .sticky-card {
+      position: static;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .project-container {
+      margin-top: 6rem;
+    }
+
+    .content-blur-wrapper {
+      padding: 2rem 1.5rem;
+      border-radius: 24px;
+    }
+
+    .media-wrapper {
+      aspect-ratio: 16/9;
+      border-radius: 16px;
+    }
+
+    .content-header h1 {
+      font-size: 2.25rem;
+    }
+  }
+</style>
