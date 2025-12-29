@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   // CRITICAL: You must set your production URL for sitemap generation
   site: 'https://xAJx1383.github.io',
-  //base : '/Portfolio',
+  base : '/Portfolio',
   integrations: [
     react(),
     sitemap({
